@@ -4,16 +4,23 @@
     :validate="validate"
     :onSubmit="handleSubmit"
   >
+    <Field name="name" type="text" />
+    <br />
+    <Field name="name" type="text" />
+    <br />
+    <button type="submit">Submit</button>
   </Formik>
 </template>
 
 <script>
 import Formik from "./components/Formik.vue";
+import Field from "./components/Field.vue";
 
 export default {
   name: "App",
   components: {
     Formik,
+    Field,
   },
   methods: {
     validate(values) {

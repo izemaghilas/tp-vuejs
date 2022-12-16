@@ -1,6 +1,11 @@
 <template>
   <form @submit.prevent="handleSubmit">
-    <button type="submit">Submit</button>
+    <slot
+      :values="values"
+      :errors="errors"
+      :isSubmitting="isSubmitting"
+      :handleSubmit="handleSubmit"
+    />
   </form>
 </template>
 
@@ -8,7 +13,6 @@
 import { ref } from "vue";
 
 export default {
-  name: "Formik",
   props: {
     initialValues: {
       type: Object,
@@ -26,31 +30,20 @@ export default {
   setup(props) {
     const values = ref(props.initialValues);
     const errors = ref({});
-    const touched = ref({});
-
-    function handleChange(event) {
-      const { name, value } = event.target;
-      values.value[name] = value;
-    }
-
-    function handleBlur(event) {
-      const { name } = event.target;
-      touched.value[name] = true;
-      errors.value[name] = props.validate(values.value)[name];
-    }
+    let isSubmitting = false;
 
     function handleSubmit(event) {
+      isSubmitting = true;
       event.preventDefault();
       props.onSubmit(values.value);
+      isSubmitting = false;
     }
 
     return {
       values,
       errors,
-      touched,
-      handleChange,
-      handleBlur,
       handleSubmit,
+      isSubmitting,
     };
   },
 };

@@ -5,11 +5,10 @@
       :id="name"
       :name="name"
       :type="type"
-      :value="values[name]"
+      :value="name"
       @input="handleChange"
       @blur="handleBlur"
     />
-    <div v-if="touched[name] && errors[name]">{{ errors[name] }}</div>
   </div>
 </template>
 
@@ -17,7 +16,6 @@
 import { ref } from "vue";
 
 export default {
-  name: "Field",
   props: {
     name: {
       type: String,

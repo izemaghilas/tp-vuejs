@@ -1,16 +1,11 @@
 <template>
   <form @submit.prevent="handleSubmit">
-    <slot
-      :values="values"
-      :errors="errors"
-      :isSubmitting="isSubmitting"
-      :handleSubmit="handleSubmit"
-    />
+    <slot :values="values" :errors="errors" :isSubmitting="isSubmitting" :handleSubmit="handleSubmit" />
   </form>
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, provide } from "vue";
 
 export default {
   props: {
@@ -31,6 +26,8 @@ export default {
     const values = ref(props.initialValues);
     const errors = ref({});
     let isSubmitting = false;
+    provide('inital:values', props.initialValues)
+
 
     function handleSubmit(event) {
       isSubmitting = true;

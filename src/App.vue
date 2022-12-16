@@ -4,9 +4,9 @@
     :validate="validate"
     :onSubmit="handleSubmit"
   >
-    <Field name="name" type="text" />
+    <Field name="email" type="text" />
     <br />
-    <Field name="name" type="text" />
+    <Field name="password" type="password" />
     <br />
     <button type="submit">Submit</button>
   </Formik>

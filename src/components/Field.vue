@@ -5,7 +5,7 @@
       :id="name"
       :name="name"
       :type="type"
-      :value="name"
+      :value="value"
       @input="handleChange"
       @blur="handleBlur"
     />
@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, inject } from "vue";
 
 export default {
   props: {
@@ -27,9 +27,10 @@ export default {
     },
   },
   setup(props, { emit, attrs }) {
+    const initialValues = inject('inital:values')
     const values = ref(attrs.values);
     const errors = ref(attrs.errors);
-    const touched = ref(attrs.touched);
+    const value = initialValues[props.name]
 
     function handleChange(event) {
       const { name, value } = event.target;
@@ -39,8 +40,6 @@ export default {
 
     function handleBlur(event) {
       const { name } = event.target;
-      touched.value[name] = true;
-      emit("update:touched", touched.value);
       errors.value[name] = attrs.validate(values.value)[name];
       emit("update:errors", errors.value);
     }
@@ -48,9 +47,9 @@ export default {
     return {
       values,
       errors,
-      touched,
       handleChange,
       handleBlur,
+      value,
     };
   },
 };

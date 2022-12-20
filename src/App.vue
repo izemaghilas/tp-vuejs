@@ -1,33 +1,45 @@
 <template>
   <Formik
-    :initialValues="{ name: '', email: '', password: '' }"
+    :initialValues="{ email: '', password: '' }"
     :validate="validate"
-    :onSubmit="handleSubmit"
+    :onSubmit="submitForm"
   >
-    <Field name="email" type="text" />
-    <br />
-    <Field name="password" type="password" />
-    <br />
-    <button type="submit">Submit</button>
+    <h1>Values</h1>
+    {{ JSON.stringify(values) }}
+    <h1>Errors</h1>
+    {{ JSON.stringify(errors) }}
+    <Field type="email" name="email" as="input" />
+    <Field type="password" name="password" as="input" />
+    <Field type="password" name="password" as="Captcha" />
+    <button type="submit" :disabled="isSubmitting">Submit</button>
   </Formik>
 </template>
 
 <script>
 import Formik from "./components/Formik.vue";
 import Field from "./components/Field.vue";
+import Captcha from "./components/Captcha.vue";
 
 export default {
-  name: "App",
+  name: "app",
   components: {
     Formik,
     Field,
+    Captcha,
+  },
+  data() {
+    return {
+      values: {
+        email: "",
+        password: "",
+      },
+      errors: {},
+      isSubmitting: false,
+    };
   },
   methods: {
     validate(values) {
       const errors = {};
-      if (!values.name) {
-        errors.name = "Required";
-      }
       if (!values.email) {
         errors.email = "Required";
       } else if (
@@ -35,13 +47,15 @@ export default {
       ) {
         errors.email = "Invalid email address";
       }
-      if (!values.password) {
-        errors.password = "Required";
-      }
       return errors;
     },
-    handleSubmit(values) {
-      console.log("clicked submit", values);
+    submitForm(values) {
+      console.log("submitting");
+      this.isSubmitting = true;
+      setTimeout(() => {
+        alert(JSON.stringify(values, null, 2));
+      }, 5000);
+      this.isSubmitting = false;
     },
   },
 };

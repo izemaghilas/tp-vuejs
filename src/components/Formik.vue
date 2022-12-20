@@ -1,13 +1,12 @@
 <template>
   <form @submit.prevent="handleSubmit">
-    <slot :values="values" :errors="errors" :isSubmitting="isSubmitting" :handleSubmit="handleSubmit" />
+    <slot />
   </form>
 </template>
 
 <script>
-import { ref, provide } from "vue";
-
 export default {
+  name: "formik",
   props: {
     initialValues: {
       type: Object,
@@ -22,25 +21,35 @@ export default {
       required: true,
     },
   },
-  setup(props) {
-    const values = ref(props.initialValues);
-    const errors = ref({});
-    let isSubmitting = false;
-    provide('inital:values', props.initialValues)
-
-
-    function handleSubmit(event) {
-      isSubmitting = true;
-      event.preventDefault();
-      props.onSubmit(values.value);
-      isSubmitting = false;
-    }
-
+  data() {
     return {
-      values,
-      errors,
-      handleSubmit,
-      isSubmitting,
+      values: {},
+      errors: {},
+      isSubmitting: false,
+    };
+  },
+  created() {
+    this.values = this.initialValues;
+    this.errors = this.validate(this.values);
+  },
+  methods: {
+    handleSubmit() {
+      this.isSubmitting = true;
+      this.errors = this.validate(this.values);
+      if (Object.keys(this.errors).length === 0) {
+        this.onSubmit(this.values);
+      } else {
+        this.isSubmitting = false;
+      }
+    },
+  },
+  provide() {
+    return {
+      formik: {
+        values: this.values,
+        errors: this.errors,
+        isSubmitting: this.isSubmitting,
+      },
     };
   },
 };
